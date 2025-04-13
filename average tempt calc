@@ -1,0 +1,10 @@
+
+def calculate_average(temperatures):
+    return sum(temperatures) / len(temperatures)
+
+# Sample temperature data for a week
+weekly_temperatures = [30.5, 32.0, 31.2, 29.8, 33.5, 34.1, 30.0]
+
+average_temp = calculate_average(weekly_temperatures)
+
+print(f"Average Temperature for the week: {average_temp:.2f}°C")
