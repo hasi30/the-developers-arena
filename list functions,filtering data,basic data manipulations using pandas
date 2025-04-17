@@ -1,0 +1,48 @@
+ Sum of Squares using List and Function
+
+def sum_of_squares(numbers):
+    return sum(x**2 for x in numbers)
+
+data = [1, 2, 3, 4, 5]
+result = sum_of_squares(data)
+print(f"Sum of squares: {result}")
+
+
+# Filter Even Numbers
+
+def filter_even(numbers):
+    return [x for x in numbers if x % 2 == 0]
+
+data = [1, 2, 3, 4, 5, 6, 7]
+filtered = filter_even(data)
+print(f"Even numbers: {filtered}")
+
+
+# Sample data (like rows in a dataset)
+data = [
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 30},
+    {"name": "Alice", "age": 25},  # Duplicate
+    {"name": "Charlie", "age": 17},
+    {"name": "David", "age": 20}
+]
+
+def clean_data(data):
+    # Remove duplicates
+    seen = set()
+    unique_data = []
+    for item in data:
+        t_item = tuple(item.items())
+        if t_item not in seen:
+            seen.add(t_item)
+            unique_data.append(item)
+
+    # Filter: Only keep entries where age >= 18
+    filtered_data = [row for row in unique_data if row["age"] >= 18]
+
+    return filtered_data
+
+cleaned = clean_data(data)
+print("Cleaned Data:")
+for row in cleaned:
+    print(row)
