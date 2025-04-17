@@ -1,0 +1,24 @@
+import pandas as pd
+
+# Load the dataset
+file_path = "rides_data.rapido.csv"  # Update the path if needed
+df = pd.read_csv(file_path)
+
+# Display basic info (optional)
+print("Original Dataset Size:", df.shape)
+
+# Drop rows with missing values in important columns
+cleaned_df = df.dropna(subset=["ride_charge", "misc_charge", "total_fare", "payment_method"])
+print("Cleaned Dataset Size:", cleaned_df.shape)
+
+# Calculate and print averages
+average_ride_charge = cleaned_df["ride_charge"].mean()
+average_misc_charge = cleaned_df["misc_charge"].mean()
+average_total_fare = cleaned_df["total_fare"].mean()
+average_distance = cleaned_df["distance"].mean()
+
+print("\n--- Average Metrics ---")
+print(f"Average Ride Charge: ₹{average_ride_charge:.2f}")
+print(f"Average Misc Charge: ₹{average_misc_charge:.2f}")
+print(f"Average Total Fare: ₹{average_total_fare:.2f}")
+print(f"Average Distance: {average_distance:.2f} km")
