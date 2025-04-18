@@ -1,0 +1,83 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+file_path = "/content/rides_data.rapido.csv"
+df = pd.read_csv(file_path)
+
+# Clean dataset
+cleaned_df = df.dropna(subset=["ride_charge", "misc_charge", "total_fare", "payment_method", "services", "distance"])
+
+# Set plot style
+sns.set(style="whitegrid")
+plt.figure(figsize=(18, 24))
+
+# Plot 1: Bar Chart - Rides by Service
+plt.subplot(4, 2, 1)
+sns.countplot(data=cleaned_df, x="services", palette="Set2")
+plt.title("Rides by Service")
+
+# Plot 2: Line Chart - Rides by Payment Method
+plt.subplot(4, 2, 2)
+payment_counts = cleaned_df["payment_method"].value_counts().reset_index()
+payment_counts.columns = ["payment_method", "ride_count"]
+sns.lineplot(data=payment_counts, x="payment_method", y="ride_count", marker="o", color="orange")
+plt.title("Rides by Payment Method (Line Chart)")
+plt.xticks(rotation=45)
+
+# Plot 3: Bubble Chart - Average Fare per Service
+plt.subplot(4, 2, 3)
+
+# Calculate both average fare and ride count per service
+service_stats = cleaned_df.groupby("services").agg(
+    avg_fare=("total_fare", "mean"),
+    ride_count=("services", "count")
+).reset_index()
+
+# Bubble chart: size represents ride_count, color represents service
+sns.scatterplot(
+    data=service_stats,
+    x="services",
+    y="avg_fare",
+    size="ride_count",
+    hue="services",
+    sizes=(100, 1000),
+    palette="tab10",
+    legend=False
+)
+
+plt.title("Bubble Chart: Average Fare vs Ride Count per Service")
+plt.xticks(rotation=45)
+
+
+
+# Plot 4: Pie Chart - Distribution of Payment Methods
+plt.subplot(4, 2, 4)
+payment_counts = cleaned_df["payment_method"].value_counts()
+plt.pie(payment_counts, labels=payment_counts.index, autopct='%1.1f%%', startangle=140)
+plt.title("Payment Method Distribution")
+
+# Plot 5: Histogram - Ride Charge
+plt.subplot(4, 2, 5)
+sns.histplot(cleaned_df["ride_charge"], bins=30, kde=True, color='skyblue')
+plt.title("Distribution of Ride Charges")
+
+# Plot 6: Box Plot - Ride Charge by Service
+plt.subplot(4, 2, 6)
+sns.boxplot(data=cleaned_df, x="services", y="ride_charge", palette="coolwarm")
+plt.title("Ride Charge by Service")
+
+# Plot 7: Histogram - Distance
+plt.subplot(4, 2, 7)
+sns.histplot(cleaned_df["distance"], bins=30, kde=True, color='lightgreen')
+plt.title("Distribution of Ride Distances")
+
+# Plot 8: Heatmap - Correlation Matrix
+plt.figure(figsize=(10, 8))
+correlation = cleaned_df[["ride_charge", "misc_charge", "total_fare", "distance"]].corr()
+sns.heatmap(correlation, annot=True, cmap="YlGnBu", linewidths=0.5)
+plt.title("Correlation Matrix")
+
+plt.tight_layout()
+plt.show()
